@@ -3,7 +3,10 @@ from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QInputDialog, QL
 import openpyxl
 from optioncalc import Ui_MainWindow  # importing our generated file
 import py_vollib.black_scholes_merton.implied_volatility as BSvol
+import py_vollib.black_scholes_merton as BSprice
 import py_vollib.black_scholes_merton.greeks.analytical as BSgreeks
+import py_vollib.black_scholes_merton.greeks.numerical as BSgreeksN
+
 import sys
 
 def multtex(tex1,tex2):
@@ -20,12 +23,13 @@ class mywindow(QtWidgets.QMainWindow):
 
       self.ui = Ui_MainWindow()
       self.ui.setupUi(self)
-      self.ui.OutWeight_5.setText("0") 
-      self.ui.OutWeight_2.setText("0.02")
-      self.ui.OutWeight_4.setText("c")
+      self.ui.dividend.setText("0") 
+      self.ui.intrate.setText("0.02")
+      self.ui.corp.setText("c")
       #self.ui.Percentage.setText(".85") 
 
-      self.ui.Compbutton.clicked.connect(self.btnClicked)
+      self.ui.Compbutton_2.clicked.connect(self.btnClicked)
+      self.ui.Compbutton.clicked.connect(self.btnClicked2)
       self.ui.actionExit.triggered.connect(self.testf)
       self.ui.actionOpen.triggered.connect(self.fd)
       #self.ui.table1.setColumnCount(4)
@@ -45,26 +49,56 @@ class mywindow(QtWidgets.QMainWindow):
      
       wb = openpyxl.load_workbook(fileName)
       sheet = wb.active
-      for i in range (3,20):
-         for j in range(2,5 ):   
-             cellinfo = str(sheet.cell(row=i, column=j).value ) 
-             curcell = QTableWidgetItem(cellinfo)
-             self.ui.OutWeight.setText(cellinfo) 
+      #for i in range (3,20):
+      #   for j in range(2,5 ):   
+      #       cellinfo = str(sheet.cell(row=i, column=j).value ) 
+      #       curcell = QTableWidgetItem(cellinfo)
+      #       self.ui.OutWeight.setText(cellinfo) 
      
-             self.ui.table1.setItem(i,j-1,curcell)
+      #       self.ui.table1.setItem(i,j-1,curcell)
       
 
    def btnClicked(self):
       
-      price = float(self.ui.Max.toPlainText()) 
-      strike = float(self.ui.Percentage.toPlainText())
-      days = float(self.ui.OutWeight.toPlainText())/365
-      rate =  float(self.ui.OutWeight_2.toPlainText())
-      cp = (self.ui.OutWeight_4.toPlainText()) 
-      yield1 = float(self.ui.OutWeight_5.toPlainText()) 
-      optprice = float(self.ui.OutWeight_6.toPlainText()) 
-      vol = str(round(BSvol.implied_volatility(optprice,price , strike, days, rate,yield1, cp),3))
-      self.ui.OutWeight_3.setText(vol) 
+      price = float(self.ui.StPrice.toPlainText()) 
+      strike = float(self.ui.Strike.toPlainText())
+      days = float(self.ui.Days.toPlainText())/365
+      rate =  float(self.ui.intrate.toPlainText())
+      divd =  float(self.ui.dividend.toPlainText())
+      cp = self.ui.corp.toPlainText() 
+       
+      optprice1 = float(self.ui.optprice.toPlainText()) 
+      vol = BSvol.implied_volatility(optprice1,price , strike, days, rate,divd, cp)
+      delt = BSgreeksN.delta(cp,price,strike, days, rate,vol,divd)
+      vega = BSgreeksN.vega(cp,price,strike, days, rate,vol,divd)
+      gamma = BSgreeksN.gamma(cp,price,strike, days, rate,vol,divd)
+      theta = BSgreeksN.theta(cp,price,strike, days, rate,vol,divd)
+      self.ui.volatility.setText(str(vol))
+      self.ui.Delta1.setText(str(delt))
+      self.ui.Theta1.setText(str(theta))
+      self.ui.Gamma1.setText(str(gamma))
+      self.ui.Vega1.setText(str(vega)) 
+
+   def btnClicked2(self):
+      
+      price = float(self.ui.StPrice.toPlainText()) 
+      strike = float(self.ui.Strike.toPlainText())
+      days = float(self.ui.Days.toPlainText())/365
+      rate =  float(self.ui.intrate.toPlainText())
+      divd =  float(self.ui.dividend.toPlainText())
+      cp = self.ui.corp.toPlainText() 
+       
+      vol = float(self.ui.volatility.toPlainText()) 
+      price1 = BSprice.black_scholes_merton(cp,price,strike,vol,days, rate,divd)
+      delt = BSgreeksN.delta(cp,price,strike, days, rate,vol,divd)
+      vega = BSgreeksN.vega(cp,price,strike, days, rate,vol,divd)
+      gamma = BSgreeksN.gamma(cp,price,strike, days, rate,vol,divd)
+      theta = BSgreeksN.theta(cp,price,strike, days, rate,vol,divd)
+      self.ui.optprice.setText(str(price1))
+      self.ui.Delta1.setText(str(delt))
+      self.ui.Theta1.setText(str(theta))
+      self.ui.Gamma1.setText(str(gamma))
+      self.ui.Vega1.setText(str(vega))    
 
 app = QtWidgets.QApplication([])
 
