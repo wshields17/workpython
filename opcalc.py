@@ -1,6 +1,7 @@
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QInputDialog, QLineEdit, QFileDialog,QTableWidgetItem
 import openpyxl
+from binomamer import binomialCallAmerican as binAm
 from optioncalc import Ui_MainWindow  # importing our generated file
 import py_vollib.black_scholes_merton.implied_volatility as BSvol
 import py_vollib.black_scholes_merton as BSprice
@@ -83,18 +84,20 @@ class mywindow(QtWidgets.QMainWindow):
       
       price = float(self.ui.StPrice.toPlainText()) 
       strike = float(self.ui.Strike.toPlainText())
-      days = float(self.ui.Days.toPlainText())/365
+      dayst = float(self.ui.Days.toPlainText())
+      days = dayst/365.0
       rate =  float(self.ui.intrate.toPlainText())
       divd =  float(self.ui.dividend.toPlainText())
       cp = self.ui.corp.toPlainText() 
        
       vol = float(self.ui.volatility.toPlainText()) 
-      price1 = BSprice.black_scholes_merton(cp,price,strike,vol,days, rate,divd)
+      price1 = BSprice.black_scholes_merton(cp,price,strike,days,rate,vol,divd)
+      price2 = binAm(price,strike,days,rate,vol,100)
       delt = BSgreeksN.delta(cp,price,strike, days, rate,vol,divd)
       vega = BSgreeksN.vega(cp,price,strike, days, rate,vol,divd)
       gamma = BSgreeksN.gamma(cp,price,strike, days, rate,vol,divd)
       theta = BSgreeksN.theta(cp,price,strike, days, rate,vol,divd)
-      self.ui.optprice.setText(str(price1))
+      self.ui.optprice.setText(str(price1) + "  " + str(price2))
       self.ui.Delta1.setText(str(delt))
       self.ui.Theta1.setText(str(theta))
       self.ui.Gamma1.setText(str(gamma))
