@@ -1,17 +1,17 @@
 import QuantLib as ql
 
-maturity_date = ql.Date(15, 1, 2016)
-spot_price = 127.62
-strike_price = 130
+maturity_date = ql.Date(17, 6, 2016)
+spot_price = 155
+strike_price = 155
 volatility = 0.20 # the historical vols for a year
-dividend_rate =  0.0163
+dividend_rate =  0.0
 option_type = ql.Option.Call
 
-risk_free_rate = 0.001
+risk_free_rate = 0.02
 day_count = ql.Actual365Fixed()
 calendar = ql.UnitedStates()
 
-calculation_date = ql.Date(8, 5, 2015)
+calculation_date = ql.Date(17, 5, 2016)
 ql.Settings.instance().evaluationDate = calculation_date
 
 payoff = ql.PlainVanillaPayoff(option_type, strike_price)
