@@ -92,7 +92,7 @@ class mywindow(QtWidgets.QMainWindow):
        
       vol = float(self.ui.volatility.toPlainText()) 
       price1 = BSprice.black_scholes_merton(cp,price,strike,days,rate,vol,divd)
-      price2 = binAm(price,strike,days,rate,vol,100)
+      price2 = binAm(price,strike,days,rate,vol,1000)
       delt = BSgreeksN.delta(cp,price,strike, days, rate,vol,divd)
       vega = BSgreeksN.vega(cp,price,strike, days, rate,vol,divd)
       gamma = BSgreeksN.gamma(cp,price,strike, days, rate,vol,divd)

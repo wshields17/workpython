@@ -1,6 +1,6 @@
 
 
-def binomialCallAmerican(s,x,T,r,sigma,n=100):
+def binomialCallAmerican(s,x,T,r,sigma,n=800):
     from math import exp,sqrt
     import numpy as np
     deltaT = T /n
