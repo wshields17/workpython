@@ -23,12 +23,12 @@ settlementDate = Date(17,May,1998)
 riskFreeRate = FlatForward(settlementDate, 0.06, Actual365Fixed())
 
 # option parameters
-exercise = AmericanExercise(settlementDate, Date(16,June,1998))
-payoff = PlainVanillaPayoff(Option.Put, 40.0)
+exercise = AmericanExercise(settlementDate, Date(18,June,1998))
+payoff = PlainVanillaPayoff(Option.Call, 155.0)
 divdate = [Date(17,June,1998)]
 divpay = [.61]
 # market data
-underlying = SimpleQuote(36.0)
+underlying = SimpleQuote(155.0)
 volatility = BlackConstantVol(todaysDate, TARGET(), 0.20, Actual365Fixed())
 dividendYield = FlatForward(settlementDate, 0.00, Actual365Fixed())
 
@@ -100,8 +100,8 @@ report('binomial (Tian)',option.NPV())
 option.setPricingEngine(BinomialVanillaEngine(process,'lr',timeSteps))
 report('binomial (LR)',option.NPV())
 
-#opt = DividendVanillaOption(payoff,exercise,divdate,divpay)
-opt = DividendVanillaOption(payoff,exercise,[],[])
+opt = DividendVanillaOption(payoff,exercise,divdate,divpay)
+#opt = DividendVanillaOption(payoff,exercise,[],[])
 
 engine = FDDividendAmericanEngine(process)
 opt.setPricingEngine(engine)
