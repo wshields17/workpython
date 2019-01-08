@@ -7,8 +7,24 @@ import py_vollib.black_scholes_merton.implied_volatility as BSvol
 import py_vollib.black_scholes_merton as BSprice
 import py_vollib.black_scholes_merton.greeks.analytical as BSgreeks
 import py_vollib.black_scholes_merton.greeks.numerical as BSgreeksN
-
+from yahoo_fin import stock_info as si
 import sys
+
+import urllib
+import re
+import time
+import sys
+from iex import Stock
+
+def fetchstockquotes(symbol):
+    base_url = 'http://finance.google.com/finance?q='
+    content = urllib.request.urlopen(base_url + symbol).read()
+    m = re.search('id="ref_(.*?)">(.*?)<', content)
+    if m:
+        quote = m.group(2)
+    else:
+        quote = 'no quote available for: ' + symbol
+    return quote
 
 def multtex(tex1,tex2):
     return str((float(tex1)* float(tex2)))
@@ -38,6 +54,15 @@ class mywindow(QtWidgets.QMainWindow):
       #self.ui.table1.setRowCount(40)
 
       #self.ui.actionExit()=sys.exit(app.exec())
+      lvprice = si.get_live_price("qqq")
+      self.ui.StPrice.setText(str(lvprice))  
+      self.ui.Strike.setText('160')
+      self.ui.intrate.setText('.02')
+      self.ui.optprice.setText(str(2))
+      self.ui.volatility.setText(str(.2))
+      self.ui.Days.setText(str(10))
+   
+
 
    def testf(self):
        
@@ -79,6 +104,9 @@ class mywindow(QtWidgets.QMainWindow):
       self.ui.Theta1.setText(str(theta))
       self.ui.Gamma1.setText(str(gamma))
       self.ui.Vega1.setText(str(vega)) 
+      
+      stockprice = Stock('qqq').price()
+      self.ui.StPrice.setText(str(stockprice))
 
    def btnClicked2(self):
       
@@ -97,11 +125,12 @@ class mywindow(QtWidgets.QMainWindow):
       vega = BSgreeksN.vega(cp,price,strike, days, rate,vol,divd)
       gamma = BSgreeksN.gamma(cp,price,strike, days, rate,vol,divd)
       theta = BSgreeksN.theta(cp,price,strike, days, rate,vol,divd)
-      self.ui.optprice.setText(str(price1) + "  " + str(price2))
+      self.ui.optprice.setText(str(price2))
       self.ui.Delta1.setText(str(delt))
       self.ui.Theta1.setText(str(theta))
       self.ui.Gamma1.setText(str(gamma))
-      self.ui.Vega1.setText(str(vega))    
+      self.ui.Vega1.setText(str(vega))
+        
 
 app = QtWidgets.QApplication([])
 
