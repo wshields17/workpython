@@ -17,14 +17,11 @@ import sys
 from iex import Stock
 
 def fetchstockquotes(symbol):
-    base_url = 'http://finance.google.com/finance?q='
-    content = urllib.request.urlopen(base_url + symbol).read()
-    m = re.search('id="ref_(.*?)">(.*?)<', content)
-    if m:
-        quote = m.group(2)
-    else:
-        quote = 'no quote available for: ' + symbol
-    return quote
+    base_url = 'https://api.iextrading.com/1.0/stock/'
+    quote1 = urllib.request.urlopen(base_url + symbol +'/price').read()
+    
+       
+    return quote1.decode("utf-8")
 
 def multtex(tex1,tex2):
     return str((float(tex1)* float(tex2)))
@@ -54,8 +51,9 @@ class mywindow(QtWidgets.QMainWindow):
       #self.ui.table1.setRowCount(40)
 
       #self.ui.actionExit()=sys.exit(app.exec())
-      lvprice = si.get_live_price("qqq")
-      self.ui.StPrice.setText(str(lvprice))  
+      #lvprice = si.get_live_price("qqq")
+      lvprice = fetchstockquotes('qqq')
+      self.ui.StPrice.setText(lvprice)  
       self.ui.Strike.setText('160')
       self.ui.intrate.setText('.02')
       self.ui.optprice.setText(str(2))
