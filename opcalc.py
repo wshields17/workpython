@@ -1,13 +1,12 @@
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QInputDialog, QLineEdit, QFileDialog,QTableWidgetItem
 import openpyxl
-from binomamer import binomialCallAmerican as binAm
+##from binomamer import binomialCallAmerican as binAm
 from optioncalc import Ui_MainWindow  # importing our generated file
 import py_vollib.black_scholes_merton.implied_volatility as BSvol
 import py_vollib.black_scholes_merton as BSprice
 import py_vollib.black_scholes_merton.greeks.analytical as BSgreeks
 import py_vollib.black_scholes_merton.greeks.numerical as BSgreeksN
-from yahoo_fin import stock_info as si
 import sys
 
 import urllib
@@ -103,8 +102,8 @@ class mywindow(QtWidgets.QMainWindow):
       self.ui.Gamma1.setText(str(gamma))
       self.ui.Vega1.setText(str(vega)) 
       
-      stockprice = Stock('qqq').price()
-      self.ui.StPrice.setText(str(stockprice))
+      #stockprice = Stock('qqq').price()
+      #self.ui.StPrice.setText(str(stockprice))
 
    def btnClicked2(self):
       
@@ -118,7 +117,7 @@ class mywindow(QtWidgets.QMainWindow):
        
       vol = float(self.ui.volatility.toPlainText()) 
       price1 = BSprice.black_scholes_merton(cp,price,strike,days,rate,vol,divd)
-      price2 = binAm(price,strike,days,rate,vol,1000)
+      #price2 = binAm(price,strike,days,rate,vol,1000)
       delt = BSgreeksN.delta(cp,price,strike, days, rate,vol,divd)
       vega = BSgreeksN.vega(cp,price,strike, days, rate,vol,divd)
       gamma = BSgreeksN.gamma(cp,price,strike, days, rate,vol,divd)
