@@ -1,6 +1,6 @@
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QInputDialog, QLineEdit, QFileDialog,QTableWidgetItem
-import openpyxl
+#import openpyxl
 ##from binomamer import binomialCallAmerican as binAm
 from optioncalc import Ui_MainWindow  # importing our generated file
 import py_vollib.black_scholes_merton.implied_volatility as BSvol
@@ -13,7 +13,7 @@ import urllib
 import re
 import time
 import sys
-from iex import Stock
+from iexfinance import Stock
 
 def fetchstockquotes(symbol):
     base_url = 'https://api.iextrading.com/1.0/stock/'
@@ -70,8 +70,8 @@ class mywindow(QtWidgets.QMainWindow):
       options |= QFileDialog.DontUseNativeDialog
       fileName, _ = QFileDialog.getOpenFileName(self,"QFileDialog.getOpenFileName()", "","Excel Files (*.xlsx)", options=options)
      
-      wb = openpyxl.load_workbook(fileName)
-      sheet = wb.active
+      #wb = openpyxl.load_workbook(fileName)
+      #sheet = wb.active
       #for i in range (3,20):
       #   for j in range(2,5 ):   
       #       cellinfo = str(sheet.cell(row=i, column=j).value ) 
@@ -106,7 +106,7 @@ class mywindow(QtWidgets.QMainWindow):
       #self.ui.StPrice.setText(str(stockprice))
 
    def btnClicked2(self):
-      
+     
       price = float(self.ui.StPrice.toPlainText()) 
       strike = float(self.ui.Strike.toPlainText())
       dayst = float(self.ui.Days.toPlainText())
@@ -122,7 +122,7 @@ class mywindow(QtWidgets.QMainWindow):
       vega = BSgreeksN.vega(cp,price,strike, days, rate,vol,divd)
       gamma = BSgreeksN.gamma(cp,price,strike, days, rate,vol,divd)
       theta = BSgreeksN.theta(cp,price,strike, days, rate,vol,divd)
-      self.ui.optprice.setText(str(price2))
+      self.ui.optprice.setText(str(price1))
       self.ui.Delta1.setText(str(delt))
       self.ui.Theta1.setText(str(theta))
       self.ui.Gamma1.setText(str(gamma))
