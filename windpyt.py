@@ -25,9 +25,9 @@ class mywindow(QtWidgets.QMainWindow):
       self.ui.Compbutton.clicked.connect(self.btnClicked)
       self.ui.actionExit.triggered.connect(self.testf)
       self.ui.actionOpen.triggered.connect(self.fd)
-      self.ui.table1.setColumnCount(4)
+      self.ui.table1.setColumnCount(7)
         
-      self.ui.table1.setRowCount(40)
+      self.ui.table1.setRowCount(30)
 
       #self.ui.actionExit()=sys.exit(app.exec())
 
@@ -42,9 +42,11 @@ class mywindow(QtWidgets.QMainWindow):
      
       wb = openpyxl.load_workbook(fileName)
       sheet = wb.active
-      for i in range (3,20):
-         for j in range(2,5 ):   
+      for i in range (1,25):
+         for j in range(2,8,2 ):   
              cellinfo = str(sheet.cell(row=i, column=j).value ) 
+             if cellinfo == 'None':
+                 cellinfo = ' '
              curcell = QTableWidgetItem(cellinfo)
              self.ui.OutWeight.setText(cellinfo) 
      

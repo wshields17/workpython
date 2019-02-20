@@ -1,4 +1,4 @@
 {
-    "python.pythonPath": "C:\\Python37\\python.exe",
+    "python.pythonPath": "xlenv\\Scripts\\python.exe",
     "python.linting.pylintEnabled": true
 }
